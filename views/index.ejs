@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza Planet</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+  
+        <% if (!loggedIn) { %>
+          <% if (currentPage !== 'login') { %>
+            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% } %>
+        <% } else { %>
+          <% if (currentPage !== 'cart') { %>
+            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+          <% } %>
+          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Welcome to Pizza Planet!</h1>
+    <p>Delicious pizzas, sides, and drinks available for you.</p>
+
+    <% if (!loggedIn) { %>
+      <p>Please <a href="/login">log in/register</a> to place an order.</p>
+    <% } else { %>
+      <p><a href="/menu">View the Menu</a></p>
+    <% } %>
+  </main>
+</body>
+</html>

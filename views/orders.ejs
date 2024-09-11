@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+
+        <% if (!loggedIn) { %>
+          <% if (currentPage !== 'login') { %>
+            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% } %>
+        <% } else { %>
+          <% if (currentPage !== 'cart') { %>
+            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+          <% } %>
+          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Your Orders</h1>
+    <% if (orders.length === 0) { %>
+      <p>No orders found.</p>
+    <% } else { %>
+      <ul>
+        <% orders.forEach(order => { %>
+          <li>
+            <strong>Order ID:</strong> <%= order._id %> <br>
+            <strong>Total:</strong> $<%= order.total.toFixed(2) %> <br>
+            <strong>Payment Status:</strong> <%= order.paymentStatus %> <br>
+            <strong>Items:</strong>
+            <ul>
+              <% order.items.forEach(item => { %>
+                <li><%= item.name %> - $<%= item.price.toFixed(2) %> x <%= item.quantity %> = $<%= (item.price * item.quantity).toFixed(2) %></li>
+              <% }); %>
+            </ul>
+          </li>
+        <% }); %>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>

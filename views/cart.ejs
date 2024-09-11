@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+
+        <% if (!loggedIn) { %>
+          <% if (currentPage !== 'login') { %>
+            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% } %>
+        <% } else { %>
+          <% if (currentPage !== 'cart') { %>
+            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+          <% } %>
+          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Your Cart</h1>
+    <ul>
+      <% cart.forEach((item, index) => { %>
+        <li>
+          <%= item.name %> - $<%= item.price %> x 
+          <form action="/update-cart" method="POST" style="display:inline;">
+            <input type="hidden" name="pizzaId" value="<%= item.id %>">
+            <button type="submit" name="action" value="minus">-</button>
+            <span><%= item.quantity %></span>
+            <button type="submit" name="action" value="plus">+</button>
+          </form>
+          <form action="/remove-from-cart" method="POST" style="display:inline;">
+            <input type="hidden" name="pizzaId" value="<%= item.id %>">
+            <button type="submit">Remove</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+    <!-- Updated total price calculation to consider item quantity -->
+    <% let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); %>
+    <h2>Total: $<%= total.toFixed(2) %></h2>
+
+    <form action="/checkout" method="POST">
+      <button type="submit">Proceed to Checkout</button>
+    </form>
+  </main>
+</body>
+</html>
+
+

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+
+        <% if (!loggedIn) { %>
+          <% if (currentPage !== 'login') { %>
+            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% } %>
+        <% } else { %>
+          <% if (currentPage !== 'cart') { %>
+            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+          <% } %>
+          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <% if (message) { %>
+      <p><%= message %></p>
+    <% } else { %>
+      <h1>Checkout</h1>
+      <form id="payment-form">
+        <div id="card-element"><!-- Stripe card element --></div>
+        <button id="submit">Pay</button>
+      </form>
+      <script>
+        const stripe = Stripe('<%= stripePublicKey %>');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+    
+        const form = document.getElementById('payment-form');
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const { paymentIntent, error } = await stripe.confirmCardPayment('<%= clientSecret %>', {
+            payment_method: {
+              card: cardElement,
+            }
+          });
+          if (error) {
+            console.log(error);
+          } else {
+            window.location.href = "/success";
+          }
+        });
+      </script>
+    <% } %>
+  </main>
+</body>
+</html>
