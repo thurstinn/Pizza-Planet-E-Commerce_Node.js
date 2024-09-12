@@ -8,39 +8,48 @@
 </head>
 <body>
   <header>
-    <nav>
-      <ul>
-        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
-        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
-        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+    <div class="header-content">
+      <h1>Pizza Planet
+        <img src="/images/icon.png" alt="Pizza Planet Icon" class="header-icon">
+      </h1> 
+      <nav>
+        <ul>
+          <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+          <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+          <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
 
-        <% if (!loggedIn) { %>
-          <% if (currentPage !== 'login') { %>
-            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% if (!loggedIn) { %>
+            <% if (currentPage !== 'login') { %>
+              <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+            <% } %>
+          <% } else { %>
+            <% if (currentPage !== 'cart') { %>
+              <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+            <% } %>
+            <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+            <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
           <% } %>
-        <% } else { %>
-          <% if (currentPage !== 'cart') { %>
-            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
-          <% } %>
-          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
-          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
-        <% } %>
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
   </header>
-  <main>
-    <h1>Menu</h1>
-    <ul>
-      <% pizzas.forEach(pizza => { %>
-        <li>
-          <%= pizza.name %> - $<%= pizza.price %>
-          <form action="/add-to-cart" method="POST" style="display:inline;">
-            <input type="hidden" name="pizzaId" value="<%= pizza.id %>">
-            <button type="submit">Add to Cart</button>
-          </form>
-        </li>
-      <% }); %>
-    </ul>
+  <main class="content">
+    <div class="menu-container">
+      <ul class="menu-list">
+        <% pizzas.forEach((pizza, index) => { %>
+          <li class="menu-item">
+            <span><%= pizza.name %> - $<%= pizza.price %></span>
+            <% if (index < 10) { %>
+              <img src="/images/placeholder<%= index + 1 %>.jpg" alt="Placeholder Image <%= index + 1 %>" class="menu-item-image">
+            <% } %>
+            <form action="/add-to-cart" method="POST">
+              <input type="hidden" name="pizzaId" value="<%= pizza.id %>">
+              <button type="submit">Add to Cart</button>
+            </form>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
   </main>
 </body>
 </html>

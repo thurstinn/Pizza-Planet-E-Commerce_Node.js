@@ -8,36 +8,46 @@
 </head>
 <body>
   <header>
-    <nav>
-      <ul>
-        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
-        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
-        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+    <div class="header-content">
+      <h1>Pizza Planet
+        <img src="/images/icon.png" alt="Pizza Planet Icon" class="header-icon">
+      </h1> 
+      <nav>
+        <ul>
+          <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+          <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+          <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
 
-        <% if (!loggedIn) { %>
-          <% if (currentPage !== 'login') { %>
-            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% if (!loggedIn) { %>
+            <% if (currentPage !== 'login') { %>
+              <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+            <% } %>
+          <% } else { %>
+            <% if (currentPage !== 'cart') { %>
+              <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+            <% } %>
+            <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+            <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
           <% } %>
-        <% } else { %>
-          <% if (currentPage !== 'cart') { %>
-            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
-          <% } %>
-          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
-          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
-        <% } %>
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
   </header>
-  <main>
-    <h1>Who the H#!! is Pizza Planet?</h1>
-    <p>
+  <main class="content">
+    <div class="text-container">
+      <h1>Who the H#!! is Pizza Planet?</h1>
+      <p>
         Pizza Planet has been serving the world’s finest pizza since 330 BC—yes, you read that right!
-        Legend has it that Alexander the Great himself discovered pizza on one of his famous campaigns. 
+        Legend has it that Alexander the Great himself discovered pizza on one of his famous campaigns.
         He tasted a humble flatbread with some toppings and declared, "This shall be the food of the gods!"
         Ever since then, we’ve carried on his legacy, spreading pizza far and wide across the globe (and beyond, if we’re being honest).
         Our pizzas have traveled through time, graced royal tables, fueled explorers, and now they’ve arrived here, just for you.
         So the next time you take a bite of our classic Margherita or loaded Meat Lover's, remember: you’re not just eating pizza—you’re eating history.
-    </p>
-    <p>
+      </p>
+      <p>
         Want to know more about our ancient pizza-making secrets? We’d tell you, but then we’d have to send you back to 330 BC!
-    </p>
+      </p>
+    </div>
+  </main>
+</body>
+</html>

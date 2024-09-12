@@ -8,28 +8,37 @@
 </head>
 <body>
   <header>
-    <nav>
-      <ul>
-        <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
-        <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
-        <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
+    <div class="header-content">
+      <h1>Pizza Planet
+        <img src="/images/icon.png" alt="Pizza Planet Icon" class="header-icon">
+      </h1> 
+      <nav>
+        <ul>
+          <li><a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+          <li><a href="/menu" class="<%= currentPage === 'menu' ? 'active' : '' %>">Menu</a></li>
+          <li><a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a></li>
 
-        <% if (!loggedIn) { %>
-          <% if (currentPage !== 'login') { %>
-            <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+          <% if (!loggedIn) { %>
+            <% if (currentPage !== 'login') { %>
+              <li><a href="/login" class="<%= currentPage === 'login' ? 'active' : '' %>">Login/Register</a></li>
+            <% } %>
+          <% } else { %>
+            <% if (currentPage !== 'cart') { %>
+              <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
+            <% } %>
+            <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
+            <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
           <% } %>
-        <% } else { %>
-          <% if (currentPage !== 'cart') { %>
-            <li><a href="/cart" class="<%= currentPage === 'cart' ? 'active' : '' %>">Cart (<%= cart.length %>)</a></li>
-          <% } %>
-          <li><a href="/orders" class="<%= currentPage === 'orders' ? 'active' : '' %>">My Orders</a></li>
-          <li><a href="/logout" class="<%= currentPage === 'logout' ? 'active' : '' %>">Logout</a></li>
-        <% } %>
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
   </header>
-  <h1>Thank you for your order!</h1>
-  <p>Your payment has been successfully processed.</p>
-  <a href="/">Return to Home</a>
+  <main class="content">
+    <div class="text-container">
+      <h1>Thank you for your order!</h1>
+      <p>Your payment has been successfully processed.</p>
+      <a href="/">Return to Home</a>
+    </div>
+  </main>
 </body>
 </html>
