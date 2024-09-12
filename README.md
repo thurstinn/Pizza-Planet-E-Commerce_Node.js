@@ -5,13 +5,13 @@ E-Commerce Site using Node.js
 * Requires MongoDB Connection String.
 * Requires Stripe Private and Public Test Keys.
     * Place as environment variables in a .env file:
-        * STRIPE_PRIVATE_KEY=<your-key>
-        * STRIPE_PUBLIC_KEY=<your-key>
-        * MONGODB_STRING=<your-connection-string>
+        * STRIPE_PRIVATE_KEY=your-key
+        * STRIPE_PUBLIC_KEY=your-key
+        * MONGODB_STRING=your-connection-string
     
     * Same for admin credentials:
-        * ADMIN_NAME=<your-admin-username>
-        * ADMIN_PASS=<your-admin-password>
+        * ADMIN_NAME=your-admin-username
+        * ADMIN_PASS=your-admin-password
 
 * Install Dependencies:
     * Open comand prompt
