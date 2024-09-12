@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Menu</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/admin/orders">View Orders</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main></main>
+    <h1>Update Menu</h1>
+
+    <!-- Display existing menu items -->
+    <h2>Current Menu</h2>
+    <ul>
+      <% menuItems.forEach(item => { %>
+        <li>
+          <strong><%= item.name %></strong>: $<%= item.price %>
+          <form action="/admin/update-menu/delete" method="POST" style="display:inline;">
+            <input type="hidden" name="id" value="<%= item._id %>">
+            <button type="submit">Remove</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+
+    <!-- Add new menu item -->
+    <h2>Add New Item</h2>
+    <form action="/admin/update-menu/add" method="POST">
+      <label for="name">Item Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="price">Price:</label>
+      <input type="number" step="0.01" id="price" name="price" required>
+
+      <button type="submit">Add Item</button>
+    </form>
+  </main>
+</body>
+</html>
+

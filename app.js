@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const Order = require('./models/order');
+const Menu = require('./models/menu'); 
 const app = express();
 require('dotenv').config();
 const port = 3000;
@@ -36,13 +37,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
 }));
-
-// Pizza menu data
-const pizzas = [
-  { id: 1, name: 'Margherita', price: 12.99 },
-  { id: 2, name: 'Pepperoni', price: 14.99 },
-  { id: 3, name: 'Veggie', price: 13.99 }
-];
 
 // Check if user is logged in
 function checkLogin(req, res, next) {
@@ -77,8 +71,18 @@ app.get('/login', (req, res) => {
   res.render('login', { loggedIn: req.session.user, currentPage: 'login' });
 });
 
+const adminCredentials = {
+  username: process.env.ADMIN_NAME,
+  password: process.env.ADMIN_PASS 
+};
+
   app.post('/login', async (req, res) => {
     const { username, password } = req.body;
+
+    if (username === adminCredentials.username && password === adminCredentials.password) {
+      req.session.user = { isAdmin: true, username }; // Store admin in session
+      return res.redirect('/admin');
+    }
   
     try {
       // Find the user by username
@@ -102,6 +106,7 @@ app.get('/login', (req, res) => {
     }
   });
   
+  // Register new user
   app.post('/register', async (req, res) => {
     const { username, password } = req.body;
   
@@ -126,7 +131,7 @@ app.get('/login', (req, res) => {
     }
   });
   
-  
+  // Log out user
   app.get('/logout', (req, res) => {
     req.session.destroy(err => {
       if (err) {
@@ -138,31 +143,107 @@ app.get('/login', (req, res) => {
     });
   });
 
-// Pizza menu page
-app.get('/menu', (req, res) => {
-  initCart(req); // Ensure cart is initialized
-  const cart = req.session.cart || []; // Default to empty array if cart is not initialized
-  const added = req.query.added === 'true'; // Check if an item was added
-  res.render('menu', { pizzas, cart, added, loggedIn: req.session.user, currentPage: 'menu' });
+// Middleware to check if the user is admin
+function checkAdmin(req, res, next) {
+  if (req.session.user && req.session.user.isAdmin) {
+    next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+// Admin panel
+app.get('/admin', checkAdmin, (req, res) => {
+  res.render('admin', { loggedIn: true, currentPage: 'admin' });
+});
+
+//Admin Update-Menu page
+app.get('/admin/update-menu', checkAdmin, async (req, res) => {
+  try {
+    const menuItems = await Menu.find({});
+    res.render('update-menu', { menuItems, loggedIn: req.session.admin });
+  } catch (err) {
+    console.error('Error fetching menu items:', err);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// Add new menu item
+app.post('/admin/update-menu/add', checkAdmin, async (req, res) => {
+  const { name, price } = req.body;
+
+  try {
+    const newItem = new Menu({ name, price });
+    await newItem.save();
+    res.redirect('/admin/update-menu');
+  } catch (error) {
+    console.error('Error adding new menu item:', error);
+    res.status(500).send('Error adding new item');
+  }
+});
+
+// Remove menu item
+app.post('/admin/update-menu/delete', checkAdmin, async (req, res) => {
+  const { id } = req.body;
+
+  try {
+    await Menu.findByIdAndDelete(id);
+    res.redirect('/admin/update-menu');
+  } catch (error) {
+    console.error('Error removing menu item:', error);
+    res.status(500).send('Error removing item');
+  }
+});
+
+// Admin View-Orders page
+app.get('/admin/orders', checkAdmin, async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    res.render('view-orders', { orders, loggedIn: req.session.admin });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// Menu page
+app.get('/menu', async (req, res) => {
+  try {
+    initCart(req); // Ensure cart is initialized
+    const cart = req.session.cart || [];
+    const pizzas = await Menu.find(); // Fetch menu items from the database
+    const added = req.query.added === 'true'; // Check if an item was added
+    res.render('menu', { pizzas, cart, added, loggedIn: req.session.user, currentPage: 'menu' });
+  } catch (error) {
+    console.error('Error fetching menu:', error);
+    res.status(500).send('Internal server error');
+  }
 });
 
 // Add to cart
-app.post('/add-to-cart', checkLogin, (req, res) => {
+app.post('/add-to-cart', checkLogin, async (req, res) => {
   const { pizzaId } = req.body;
-  const pizza = pizzas.find(p => p.id == pizzaId);
   initCart(req);
-  const cartItem = req.session.cart.find(item => item.id == pizzaId);
+
+  // Find pizza by its MongoDB _id
+  const pizza = await Menu.findById(pizzaId);
+  if (!pizza) {
+    return res.status(404).send('Pizza not found');
+  }
+
+  const cartItem = req.session.cart.find(item => item._id.toString() === pizzaId);
 
   if (cartItem) {
     // If it exists, increase the quantity
     cartItem.quantity += 1;
   } else {
     // If not, add the pizza with a quantity of 1
-    req.session.cart.push({ ...pizza, quantity: 1 });
+    req.session.cart.push({ ...pizza.toObject(), quantity: 1 });
   }
-  //req.session.cart.push(pizza);
+
   res.redirect('/menu?added=true');
 });
+
 
 // Cart page
 app.get('/cart', (req, res) => {
@@ -171,36 +252,59 @@ app.get('/cart', (req, res) => {
   res.render('cart', { cart, loggedIn: req.session.user, currentPage: 'cart' });
 });
 
-// Update cart (increase or decrease quantity)
-app.post('/update-cart', (req, res) => {
+// Update Cart
+app.post('/update-cart', checkLogin, async (req, res) => {
   const { pizzaId, action } = req.body;
+
+  // Validate pizzaId
+  if (!mongoose.Types.ObjectId.isValid(pizzaId)) {
+    return res.status(400).send('Invalid pizzaId');
+  }
+
   initCart(req);
 
   const cart = req.session.cart;
-  const pizza = cart.find(p => p.id == pizzaId);
+  const pizzaIdObj = new mongoose.Types.ObjectId(pizzaId); // Use new keyword for ObjectId
+
+  // Find pizza in the menu
+  const pizza = await Menu.findById(pizzaIdObj).exec();
 
   if (pizza) {
-    if (action === 'plus') {
-      pizza.quantity += 1; // Increase quantity
-    } else if (action === 'minus') {
-      pizza.quantity -= 1; // Decrease quantity but not below 1
-      if (pizza.quantity < 1) {
-        pizza.quantity = 1;
+    const cartItem = cart.find(item => item._id.toString() === pizzaIdObj.toString()); // Convert both to string for comparison
+
+    if (cartItem) {
+      if (action === 'plus') {
+        cartItem.quantity += 1; // Increase quantity
+      } else if (action === 'minus') {
+        cartItem.quantity -= 1; // Decrease quantity but not below 1
+        if (cartItem.quantity < 1) {
+          cartItem.quantity = 1;
+        }
       }
     }
   }
 
-  //req.session.cart = cart;
   res.redirect('/cart');
 });
 
-app.post('/remove-from-cart', (req, res) => {
+// Remove from Cart
+app.post('/remove-from-cart', checkLogin, (req, res) => {
   const { pizzaId } = req.body;
-  const cart = req.session.cart;
 
-  req.session.cart = cart.filter(item => item.id != pizzaId);
+  // Validate pizzaId
+  if (!mongoose.Types.ObjectId.isValid(pizzaId)) {
+    return res.status(400).send('Invalid pizzaId');
+  }
+
+  initCart(req);
+
+  const cart = req.session.cart;
+  const pizzaIdObj = new mongoose.Types.ObjectId(pizzaId); // Use new keyword for ObjectId
+
+  req.session.cart = cart.filter(item => item._id.toString() !== pizzaIdObj.toString()); // Convert both to string for comparison
   res.redirect('/cart');
 });
+
 
 // Checkout with Stripe
 app.post('/checkout', checkLogin, async (req, res) => {

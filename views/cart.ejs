@@ -35,13 +35,13 @@
         <li>
           <%= item.name %> - $<%= item.price %> x 
           <form action="/update-cart" method="POST" style="display:inline;">
-            <input type="hidden" name="pizzaId" value="<%= item.id %>">
+            <input type="hidden" name="pizzaId" value="<%= item._id %>">
             <button type="submit" name="action" value="minus">-</button>
             <span><%= item.quantity %></span>
             <button type="submit" name="action" value="plus">+</button>
           </form>
           <form action="/remove-from-cart" method="POST" style="display:inline;">
-            <input type="hidden" name="pizzaId" value="<%= item.id %>">
+            <input type="hidden" name="pizzaId" value="<%= item._id %>">
             <button type="submit">Remove</button>
           </form>
         </li>
