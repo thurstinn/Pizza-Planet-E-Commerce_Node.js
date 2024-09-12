@@ -18,7 +18,7 @@ E-Commerce Site using Node.js
     * Navigate to root directory
     * Enter command: npm install
 
-* Seed initial menu in database:
+* Seed Initial Menu In Database:
     * Enter command node seedMenu.js
 
 * Start Web App:
