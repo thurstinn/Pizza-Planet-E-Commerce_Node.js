@@ -1,10 +1,9 @@
-/* General styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #f9f9f9; /* Light background for better contrast */
+    background-color: #f9f9f9;
   }
   
   header {
@@ -14,7 +13,7 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000; /* Ensure header is on top */
+    z-index: 1000;
   }
   
   .header-content {
@@ -27,26 +26,26 @@ body {
 
   header h1 {
     display: flex;
-    align-items: center; /* Align text and icon vertically */
-    margin: 0; /* Remove default margin */
-    font-size: 1.5rem; /* Adjust font size as needed */
+    align-items: center;
+    margin: 0;
+    font-size: 1.5rem;
   }
 
   .header-icon {
-    width: 20px; /* Adjust size as needed */
-    height: auto; /* Maintain aspect ratio */
-    margin-left: 5px; /* Space between text and icon */
+    width: 20px;
+    height: auto;
+    margin-left: 5px;
   }
 
   header nav ul li a {
     color: #fff;
     text-decoration: none;
-    transition: color 0.3s ease; /* Smooth transition */
+    transition: color 0.3s ease;
     vertical-align: middle;
   }
   
   header nav ul li a:hover {
-    color: #ffa500; /* Highlight orange on hover */
+    color: #ffa500;
   }
   
   header nav ul li a.active {
@@ -95,12 +94,12 @@ body {
   main .text-container {
     max-width: 800px;
     margin: 0 0 0 100px;
-    text-align: left; /* Aligns text to the left inside the container */
+    text-align: left;
   }
 
   main h1 {
-    font-size: 1.5rem; /* Make the font smaller */
-    margin-bottom: 10px; /* Reduce space between the heading and the paragraph */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
   }
   
   main p {
@@ -118,7 +117,7 @@ body {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    max-width: 800px; /* Adjust based on your layout */
+    max-width: 800px;
   }
   
   .menu-item {
@@ -150,12 +149,12 @@ body {
   }
   
   .menu-item button {
-    background-color: #f39c12; /* Orange theme */
+    background-color: #f39c12;
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    border-radius: 4px; /* Rounded corners */
+    border-radius: 4px;
   }
   
   .menu-item button:hover {
@@ -210,7 +209,7 @@ body {
   }
   
   .logout-button {
-    background-color: #e74c3c; /* Red color for logout */
+    background-color: #e74c3c;
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
@@ -224,19 +223,19 @@ body {
   
   /* Form styles */
   form {
-    max-width: 400px; /* Reduce the max width of the form */
-    margin: 0 0 0 5px;/* Center the form and add vertical margin */
-    padding: 0.1rem; /* Reduce padding inside the form */
-    border: 1px solid #ddd; /* Optional: Add a border for visibility */
-    border-radius: 4px; /* Optional: Add rounded corners */
-    background-color: #fff; /* Optional: Set background color */
+    max-width: 400px;
+    margin: 0 0 0 5px;
+    padding: 0.1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
   }
   
   /* Form label styles */
   form label {
     display: block;
-    margin-bottom: 0.25rem; /* Reduce space between label and input */
-    font-size: 0.875rem; /* Smaller font size for labels */
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
   }
   
   form input, form select, form textarea {
@@ -248,7 +247,7 @@ body {
   }
   
   form button {
-    background-color: #f39c12; /* Orange theme */
+    background-color: #f39c12;
     color: #fff;
     border: none;
     padding: 0.1rem 0.2rem;
