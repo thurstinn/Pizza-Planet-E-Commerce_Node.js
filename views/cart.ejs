@@ -53,7 +53,6 @@
         </li>
       <% }) %>
     </ul>
-    <!-- Updated total price calculation to consider item quantity -->
     <% let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); %>
     <h2>Total: $<%= total.toFixed(2) %></h2>
 

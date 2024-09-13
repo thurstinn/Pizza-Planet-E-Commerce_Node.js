@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const Stripe = require('stripe');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -36,6 +37,7 @@ app.use(session({
   secret: 'yourSecretKey',
   resave: false,
   saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_STRING })
 }));
 
 // Check if user is logged in
