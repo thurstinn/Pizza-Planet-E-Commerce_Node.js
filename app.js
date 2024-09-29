@@ -9,6 +9,7 @@ const User = require('./models/user');
 const Order = require('./models/order');
 const Menu = require('./models/menu');
 const rateLimit = require('express-rate-limit');
+const passwordValidator = require('password-validator');
 const app = express();
 require('dotenv').config();
 const port = 3000;
@@ -125,15 +126,32 @@ const loginLimiter = rateLimit({
     }
   });
   
+const schema = new passwordValidator();
+
+// Define the password validation rules
+schema
+  .is().min(8) // Minimum length 8
+  .is().max(100) // Maximum length 100
+  .has().uppercase() // Must have at least one uppercase letter
+  .has().lowercase() // Must have at least one lowercase letter
+  .has().digits() // Must have at least one digit
+  .has().symbols(); // Must have at least one symbol
+
+
   // Register new user
   app.post('/register', async (req, res) => {
     const { username, password } = req.body;
   
     try {
+      // Validate the password
+      if (!schema.validate(password)) {
+        return res.status(400).send('Password does not meet requirements: 1 upper, 1 lower, 1 digit, 1 symbol, length 8 <a href="/login">Go back</a>.');
+      }
+      
       // Check if user already exists
       const existingUser = await User.findOne({ username });
       if (existingUser) {
-        return res.status(400).send('Username already in use. <a href="/login">Log in</a>.');
+        return res.status(400).send('Username already in use. <a href="/login">Go back</a>.');
       }
   
       // Hash the password and create a new user

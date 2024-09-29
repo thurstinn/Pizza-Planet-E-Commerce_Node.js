@@ -25,7 +25,15 @@ E-Commerce Site using Node.js
 * Start Web App:
     * Enter command: npm start
 
-* To make a (fake) order, first register (no restrictions on password).
+* To make a (fake) order, first register:
+    * Any username
+    * Password Requirements:
+        * Minimum length 8
+        * Maximum length 100
+        * Must have at least one uppercase letter
+        * Must have at least one lowercase letter
+        * Must have at least one digit
+        * Must have at least one symbol
 * To checkout, enter card#: 4242 4242 4242 4242 
 * Expiration: any future date (05/31).
 * CVC: any 3 digit number.
