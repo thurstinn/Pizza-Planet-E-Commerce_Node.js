@@ -39,12 +39,13 @@
     <h1>Your Cart</h1>
     <ul>
       <% cart.forEach((item, index) => { %>
-        <li>
-          <%= item.name %> - $<%= item.price %> x 
+        <li class="cart-item">
+          <span class="item-name"><%= item.name %></span> 
+          <span class="item-price">$<%= item.price %></span>
           <form action="/update-cart" method="POST" style="display:inline;">
             <input type="hidden" name="pizzaId" value="<%= item._id %>">
             <button type="submit" name="action" value="minus">-</button>
-            <span><%= item.quantity %></span>
+            <span class="item-quantity"><%= item.quantity %></span>
             <button type="submit" name="action" value="plus">+</button>
           </form>
           <form action="/remove-from-cart" method="POST" style="display:inline;">

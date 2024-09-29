@@ -7,7 +7,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('./models/user');
 const Order = require('./models/order');
-const Menu = require('./models/menu'); 
+const Menu = require('./models/menu');
+const rateLimit = require('express-rate-limit');
 const app = express();
 require('dotenv').config();
 const port = 3000;
@@ -34,11 +35,25 @@ app.use(bodyParser.json());
 
 // Set up session
 app.use(session({
-  secret: 'yourSecretKey',
+  secret: process.env.SESSION_KEY,
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: process.env.MONGODB_STRING })
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_STRING }),
+  cookie: {
+    httpOnly: true, // Prevent JavaScript access to cookies
+    secure: process.env.NODE_ENV === 'production', // Set secure to true in production (with HTTPS)
+    maxAge: 30 * 60 * 1000 // Set session to expire in 30 minutes
+  }
 }));
+
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(`https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
+}
 
 // Check if user is logged in
 function checkLogin(req, res, next) {
@@ -73,19 +88,15 @@ app.get('/login', (req, res) => {
   res.render('login', { loggedIn: req.session.user, currentPage: 'login' });
 });
 
-const adminCredentials = {
-  username: process.env.ADMIN_NAME,
-  password: process.env.ADMIN_PASS 
-};
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 login requests per windowMs
+  message: "Too many login attempts, please try again later."
+});
 
-  app.post('/login', async (req, res) => {
+  app.post('/login', loginLimiter, async (req, res) => {
     const { username, password } = req.body;
 
-    if (username === adminCredentials.username && password === adminCredentials.password) {
-      req.session.user = { isAdmin: true, username }; // Store admin in session
-      return res.redirect('/admin');
-    }
-  
     try {
       // Find the user by username
       const user = await User.findOne({ username });
@@ -99,9 +110,15 @@ const adminCredentials = {
         return res.status(400).send('Invalid password. <a href="/login">Try again</a>.');
       }
   
-      // Store user in session
-      req.session.user = user;
-      res.redirect('/menu');
+      // Store user in session, checking if they are an admin
+      req.session.user = { _id: user._id, username: user.username, isAdmin: user.isAdmin || false };
+  
+      // Redirect based on user role
+      if (user.isAdmin) {
+        return res.redirect('/admin'); // Redirect admin users to the admin panel
+      } else {
+        return res.redirect('/menu'); // Redirect regular users to the menu
+      }
     } catch (error) {
       console.error('Error during login:', error);
       res.status(500).send('Internal server error');
@@ -383,5 +400,5 @@ app.get('/orders', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

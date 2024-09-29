@@ -171,6 +171,24 @@ body {
     background-color: #e67e22;
   }
   
+  .cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .item-name {
+      flex: 1;
+  }
+
+  .item-quantity {
+      margin-left: 0px;
+  }
+
+  .item-price {
+      margin-left: 10px;
+  }
   /* Checkout page styles */
   .checkout-container {
     max-width: 800px;
@@ -230,6 +248,22 @@ body {
   .logout-button:hover {
     background-color: #c0392b;
   }
+
+  .update-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+  }
+
+  .update-item-name {
+      flex: 1;
+  }
+
+  .update-item-price {
+      margin-left: 10px;
+  }
+
   
   /* Form styles */
   form {

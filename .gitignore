@@ -3,3 +3,4 @@ README.txt
 pizzaplanet.exe
 .env
 package-lock.json
+hashPassword.js
