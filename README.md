@@ -26,7 +26,7 @@ E-Commerce Site using Node.js
     * Enter command: npm start
 
 * To make a (fake) order, first register:
-    * Any username
+    * Username of your choice
     * Password Requirements:
         * Minimum length 8
         * Maximum length 100
@@ -55,7 +55,7 @@ E-Commerce Site using Node.js
         );
         ```
 
-    * Now you can login with those credentials to be directed to the admin panel.
+    * Now you can login with those credentials to be directed to the Admin Panel.
 
 
 
