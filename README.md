@@ -12,7 +12,8 @@ E-Commerce Site using Node.js
     * Other environment variables:
         * SESSION_KEY=your-session-secret
         * PORT=3000
-        * NODE_ENV=development *Change to 'production' before deploying.
+        * NODE_ENV=development
+            * Change to NODE_ENV=production prior to deployment to enhance session security and enforce HTTPS
 
 * Install Dependencies:
     * Open comand prompt
