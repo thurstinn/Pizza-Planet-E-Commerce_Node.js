@@ -13,7 +13,6 @@ E-Commerce Site using Node.js
         * SESSION_KEY=your-session-secret
         * PORT=3000
         * NODE_ENV=development *Change to 'production' before deploying.
-        * ADMIN_PW=your-admin-password
 
 * Install Dependencies:
     * Open comand prompt
@@ -36,7 +35,8 @@ E-Commerce Site using Node.js
     * Register a user you want to be admin.
     * In MongoDB Compass, navigate to users folder.
     * Open shell and enter command: 
-        
+
+        ```
         db.users.updateOne(
             { username: "your-username" },
             {
@@ -45,6 +45,7 @@ E-Commerce Site using Node.js
                 }
             }
         );
+        ```
 
     * Now you can login with those credentials to be directed to the admin panel.
 
