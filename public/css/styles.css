@@ -106,16 +106,36 @@ body {
     margin: 0 0 0 100px;
     text-align: left;
   }
-
+  
   main h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 10px;
   }
   
+  main h2 {
+    font-size: 1.2rem;
+  }
+
   main p {
     max-width: 800px;
     margin: 0 auto 20px;
     line-height: 1.6;
+  }
+  
+  .image-container {
+    float: left;
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .image-container img {
+    max-width: 100%;
+    height: auto; 
+    display: block;
+    margin: -200px auto 0 auto;
   }
   
   
