@@ -226,6 +226,20 @@ body {
     text-align: right;
     padding: 1rem;
   }
+
+  .order-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  .order-item strong {
+    font-size: 1.1em;
+  }
+  .order-item ul {
+    padding-left: 20px;
+  }
   
   /* Admin page styles */
   .admin-container {

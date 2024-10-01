@@ -90,8 +90,8 @@ app.get('/login', (req, res) => {
 });
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 login requests per windowMs
+  windowMs: 5 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 5 login requests per windowMs
   message: "Too many login attempts, please try again later."
 });
 
@@ -235,7 +235,7 @@ app.post('/admin/update-menu/delete', checkAdmin, async (req, res) => {
 // Admin View-Orders page
 app.get('/admin/orders', checkAdmin, async (req, res) => {
   try {
-    const orders = await Order.find({});
+    const orders = await Order.find({}).sort({ createdAt: -1 }).populate('items');
     res.render('view-orders', { orders, loggedIn: req.session.admin });
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -400,7 +400,7 @@ app.get('/success', async (req, res) => {
 app.get('/orders', async (req, res) => {
   try {
     // Fetch the user's orders from the database
-    const orders = await Order.find({ user: req.session.user._id });
+    const orders = await Order.find({ user: req.session.user._id }).sort({ createdAt: -1 }).populate('items');
     
     // Initialize the cart if it's not already initialized
     const cart = req.session.cart || [];
